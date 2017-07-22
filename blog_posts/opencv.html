@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Installing OpenCV on a Mac</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="../assets/css/main.css" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="/" class="logo"><<strong>Ibrahim Shaikh</strong>/></a>
+						<nav>
+							<a href="/">Home</a>
+							<a href="/profile.html">Profile</a>
+						</nav>
+					</header>
+
+				<!-- Main -->
+					<div id="main" class="alt">
+
+						<!-- One -->
+							<section id="one">
+								<div class="inner">
+									<header class="major">
+										<h1>Installing OpenCV on a Mac</h1>
+										<p>May 26, 2017</p>
+									</header>
+									<span class="image main"><img src="../images/opencv-python.png" alt="OpenCV and Python logos" style="border-radius: 20px" /></span>
+									<!-- Content Goes here -->
+									<p></p>
+									<p>OpenCV is a very powerful tool for analyzing images and creating complex applications that use computer vision. If you have been having trouble installing it, fear not, you are not alone. I have gone through the same struggles of trying to install this framework and I am here to share the steps that worked for me.</p><p>Before continuing, please be aware that these steps will only work for a computer running <b>macOS / OSX</b>.</p><hr><p><h2>Pre-Requisites</h2></p><p>You will need to complete a number of steps and install some packages before you can proceed to actually installing OpenCV.</p><p><h3>X-Code</h3></p><p>X-Code is first on the list of software you will need to install. Luckily most of you probably already have it installed, and if not then the installation process is very easy and painless.</p><p>You will need to go to the Mac App store and search for X-Code in the search box and install it when you find it.</p><p>Next you will need to open  terminal and install the <strong>Apple Command Line Tools</strong> and <strong>accept the Apple Developer License</strong></p><code>$ sudo xcode-select --install</code><br><code>$ sudo xcodebuild -liscence</code><br><br><h3>Homebrew</h3><p>Homebrew is a package manager that is essential for any developer using macOS. If you do not already have it installed, follow the next steps to do so.</p><code>$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</code><br><code>$ brew update</code><br><br><p>You will need to update the PATH in your <code>~/.bash_profile</code> so that it searches your Homebrew path for packages/libraries before it searches your system path. This is easily done by opening your <code>~/.bash_profile</code> with a text editor and simply appending a line to it. Vim is used in this example to open the file.</p><code>$ vim ~/.bash_profile</code><p>Append the following line: <code>export PATH=/usr/local/bin:$PATH</code></p><code>$ source ~/.bash_profile</code><br><br><h3>Python</h3><p>The Homebrew version of python will be used over the system version. The following commands will successfully install it.</p><code>$ brew install python3</code><br><code>$ brew link python3</code><br><br><p>To confirm that you are using the correct python installation, enter the following command.</p><code>$ which python3</code><p>The output should be: <code>/usr/local/bin/python3</code></p><h3>Installing Required Packages</h3><p>There are just a few more packages that are needed before you can properly install OpenCV. You can install them by entering the folliwing commands.</p><code>$ brew tap homebrew/science</code><br><code>$ brew install eigen tbb hdf5 tesseract pyenv pyenv-virtualenv</code><br><code>$ brew install cmake</code><br><br><h3>Setting up pyenv Python Virtual Environment</h3><p>Using a virtual environment to develop and run your projects using OpenCV is highly recommended. Installing a python virtual environment like pyenv is quite simple and the following steps will describe how to do so.</p><p>First you will need to install pyenv by entering the following command.<br><code>$ env PYTHON_CONFIGURE_OPTS="--enable-shared" CFLAGS="-O2" pyenv install 3.6.1</code><br><br>Next You will need to add the following lines to your bash profile.<br><code>eval "$(pyenv virtualenv-init -)"</code><br><code>eval "$(pyenv init -)"</code><br><br>Then reload your bash profile.<br><code>$ source ~/.bash_profile</code></p><p>Now that you have pyenv successfully installed, lets create a virtual environment and install more dependencies that OpenCV uses. This command will create you virtual environment.<br><code>$ pyenv virtualenv 3.6.1 opencv</code></p><p>Now that your environment is created, you have to activate it.<br><code>$ pyenv activate heal</code></p><p>Now all that's left is to install the dependencies.<br><code>$ pip install -U pip setuptools wheel cython numpy</code></p><hr><p><h2>Installing OpenCV</h2></p><p>Now that your system is all prepared, it is finally time to actually install OpenCV! The actual installation process is simply a number of terminal commands, whose details I will not discuss heavily but should be pretty easy to understand. Go through and enter in the following commands in order into terminal and by the end you will have a working installation of OpenCV.<br><code>$ sudo mkdir -p /opt/src</code><br><br><code>$ sudo chown $(whoami):staff /opt</code><br><br><code>$ sudo chown $(whoami):staff /opt/src</code><br><br><code>$ cd /opt/src</code><br><br><code>$ curl -L https://github.com/opencv/opencv/archive/3.2.0.zip -o opencv32.zip</code><br><br><code>$ curl -L https://github.com/opencv/opencv_contrib/archive/3.2.0.zip -o opencv32contrib.zip</code><br><br><code>$ unzip opencv32.zip</code><br><br><code>$ unzip opencv32contrib.zip</code><br><br><code>$ mv -v opencv-3.2.0 /opt/src/opencv32_py36</code><br><br><code>$ mv -v opencv_contrib-3.2.0 /opt/src/opencv32_py36_contrib</code><br><br><code>$ cd /opt/src/opencv32_py36</code><br><br><code>$ mkdir /opt/src/opencv32_py36/release</code><br><br><code>$ cd /opt/src/opencv32_py36/release</code><br><pre><code>$ cmake \
+    -D CMAKE_INSTALL_PREFIX=/opt/opencv32_py36 \
+    -D OPENCV_EXTRA_MODULES_PATH=/opt/src/opencv32_py36_contrib/modules \
+    -D BUILD_opencv_python2=OFF \
+    -D BUILD_opencv_python3=ON \
+    -D BUILD_TIFF=ON \
+    -D BUILD_opencv_java=OFF \
+    -D WITH_CUDA=OFF \
+    -D ENABLE_FAST_MATH=1 \
+    -D ENABLE_AVX=ON \
+    -D WITH_OPENGL=ON \
+    -D WITH_OPENCL=ON \
+    -D WITH_IPP=OFF \
+    -D WITH_TBB=ON \
+    -D WITH_EIGEN=ON \
+    -D WITH_V4L=OFF \
+    -D WITH_VTK=OFF \
+    -D BUILD_TESTS=OFF \
+    -D BUILD_PERF_TESTS=OFF \
+    -D CMAKE_BUILD_TYPE=RELEASE \
+    -D PYTHON3_LIBRARY=$(python3 -c "import re, os.path; print(os.path.normpath(os.path.join(os.path.dirname(re.__file__), '..', 'libpython3.6m.dylib')))") \
+    -D PYTHON3_EXECUTABLE=$(which python3) \
+    -D PYTHON3_INCLUDE_DIR=$(python3 -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
+    -D PYTHON3_PACKAGES_PATH=$(python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") ..</code></pre><code>$ make -j8</code><br><br><code>$ make install</code></p>
+    								<hr><p><h2>Confirming Everything Works</h2></p><p>Congradulations for making it this far! Hopefully everything went smoothly and you have OpenCV installed. To make sure, you just need to open the python shell in terminal and try importing it.<br><code>$ python3</code><br>It should say your version number is <code>3.6.1</code>.</p><p>Now that your in the python shell, try importing OpenCV using the following command.<br><code>>>> import opencv2</code></p><p>If you do not get any errors, then CONGRADULATIONS!! Everything installed properly and you can now use OpenCV!</p><hr><h2>Thank You</h2><p>I hope you found this post helpful and you build great software with OpenCV. Please share this post with anyone else you believe would find it interesting or benefitial. Have a great day and happy coding!</p><p>- Ibrahim</p>
+								</div>
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<div class="inner">
+							<ul class="icons">
+								<li><a href="https://github.com/ibrahims123457" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+								<li><a href="https://www.linkedin.com/in/ibrahim-shaikh/" class="icon alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							</ul>
+							<ul class="copyright">
+								<li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/jquery.scrolly.min.js"></script>
+			<script src="../assets/js/jquery.scrollex.min.js"></script>
+			<script src="../assets/js/skel.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="../assets/js/main.js"></script>
+
+	</body>
+</html>
